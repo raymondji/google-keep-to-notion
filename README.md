@@ -15,6 +15,15 @@ npm install
 npm start
 ```
 
+## TODO
+
+Bugs:
+- Notion only allows appending 100 blocks in a single API request. Instead of trying to add all blocks as children in one go when creating a page, create an empty page and then append 100 blocks at a time. Sample error: "body failed validation: body.children.length should be ≤ `100`"
+
+Features:
+- Include the file names of missing attachments in the page content
+
+
 ## Notion API references
 
 - https://github.com/makenotion/notion-sdk-js
