@@ -1,0 +1,24 @@
+{
+    "color": "DEFAULT",
+    "isTrashed": false,
+    "isPinned": false,
+    "isArchived": false,
+    "annotations": [
+        {
+            "description": "Enter code FIRST10 at checkout and save $10 on your first order",
+            "source": "WEBLINK",
+            "title": "Shef | Authentic dishes. Homemade. Delivered.",
+            "url": "https://shef.com/"
+        }
+    ],
+    "textContent": "Wow home cooked meal delivery is great\nI wonder what it costs",
+    "title": "Has attachments",
+    "userEditedTimestampUsec": 1617052775755000,
+    "createdTimestampUsec": 1617052768460000,
+    "attachments": [
+        {
+            "filePath": "1861d958aa0.a51d41fb7b62f65d.png",
+            "mimetype": "image/png"
+        }
+    ]
+}

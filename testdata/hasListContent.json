@@ -1,0 +1,21 @@
+{
+    "color": "DEFAULT",
+    "isTrashed": false,
+    "isPinned": false,
+    "isArchived": false,
+    "listContent": [
+        {
+            "textHtml": "<p dir=\"ltr\" style=\"line-height:1.38;margin-top:0.0pt;margin-bottom:0.0pt;\"><span style=\"font-size:16.0pt;font-family:'Google Sans';color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;\">Squares: 1 + 16 + 4 + 4 + 1 (+ 9 + 1) = 36<\/span><\/p>",
+            "text": "Squares: 1 + 16 + 4 + 4 + 1 (+ 9 + 1) = 36",
+            "isChecked": true
+        },
+        {
+            "textHtml": "<p dir=\"ltr\" style=\"line-height:1.38;margin-top:0.0pt;margin-bottom:0.0pt;\"><span style=\"font-size:16.0pt;font-family:'Google Sans';color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;\">Triangles: 1 + 10 + 14 + 8 + 12 = 45<\/span><\/p>",
+            "text": "Triangles: 1 + 10 + 14 + 8 + 12 = 45",
+            "isChecked": false
+        }
+    ],
+    "title": "Has list content",
+    "userEditedTimestampUsec": 1617052775755000,
+    "createdTimestampUsec": 1617052768460000
+}

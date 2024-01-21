@@ -1,0 +1,18 @@
+{
+    "color": "DEFAULT",
+    "isTrashed": false,
+    "isPinned": false,
+    "isArchived": false,
+    "textContent": "https://shef.com/",
+    "title": "Has labels",
+    "userEditedTimestampUsec": 1617052775755000,
+    "createdTimestampUsec": 1617052768460000,
+    "labels": [
+        {
+            "name": "cooking"
+        },
+        {
+            "name": "tools"
+        }
+    ]
+}

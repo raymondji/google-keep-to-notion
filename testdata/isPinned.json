@@ -1,0 +1,16 @@
+{
+    "color": "DEFAULT",
+    "isTrashed": false,
+    "isPinned": true,
+    "isArchived": false,
+    "textContent": "https://shef.com/",
+    "title": "Is pinned",
+    "userEditedTimestampUsec": 1617052775755000,
+    "createdTimestampUsec": 1617052768460000,
+    "textContentHtml": "<p dir=\"ltr\" style=\"line-height:1.38;margin-top:0.0pt;margin-bottom:0.0pt;\"><span style=\"font-size:16.0pt;font-family:'Google Sans';color:#000000;background-color:transparent;font-weight:400;font-style:normal;font-variant:normal;text-decoration:none;vertical-align:baseline;white-space:pre;white-space:pre-wrap;\">https://shef.com/<\/span><\/p>",
+    "labels": [
+        {
+            "name": "tools"
+        }
+    ]
+}
