@@ -31,3 +31,4 @@ Features:
 - https://developers.notion.com/reference/create-a-database
 - https://developers.notion.com/reference/post-page
 - https://developers.notion.com/reference/block
+- https://developers.notion.com/reference/patch-block-children
