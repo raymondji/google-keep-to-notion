@@ -19,12 +19,12 @@ const notion = new Client({
         try {
             const pageParams = getCreatePageParams(dbId, note);
             const pageResp = await notion.pages.create(pageParams);
-            await sleep(1000);
+            await sleep(300);
 
             const blocksParamsList = getAppendBlocksChildrenParamsList(pageResp.id, note);
             for (const blocksParams of blocksParamsList) {
                 await notion.blocks.children.append(blocksParams);
-                await sleep(250);
+                await sleep(300);
             }
         } catch (err) {
             console.error("Failed to import note:", note, "error:", err);
