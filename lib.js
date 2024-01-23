@@ -5,11 +5,10 @@ export function readAllGoogleKeepNotes(dir) {
     return fs.readdirSync(dir)
         .filter(file => path.extname(file) === '.json')
         .map(file => path.resolve(dir, file))
-        .map(path => JSON.parse(fs.readFileSync(path)))
-        .map(parseGoogleKeepNoteJSON);
+        .map(path => toGoogleKeepNote(path, JSON.parse(fs.readFileSync(path))));
 }
 
-function parseGoogleKeepNoteJSON(noteJSON) {
+function toGoogleKeepNote(path, noteJSON) {
     function throwParseError(msg) {
         throw new Error(msg + " " + JSON.stringify(noteJSON));
     };
@@ -35,6 +34,7 @@ function parseGoogleKeepNoteJSON(noteJSON) {
 
     const labels = noteJSON.labels ? noteJSON.labels = noteJSON.labels.map(l => { return { name: l.name } }) : [];
     return {
+        path,
         title: noteJSON.title,
         created: new Date(noteJSON.createdTimestampUsec / 1000),
         updated: new Date(noteJSON.userEditedTimestampUsec / 1000),

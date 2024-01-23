@@ -33,6 +33,9 @@ const notion = new Client({
     }
     if (failed.length > 0) {
         console.error(`IMPORTANT: Failed to import ${failed.length} note(s)`);
+        for (const note of failed) {
+            console.error(`- ${note.path}`);
+        }
     }
 })();
 
