@@ -7,8 +7,7 @@ export function readAllGoogleKeepNotes(dir) {
         .map(file => path.resolve(dir, file))
         .map(path => toGoogleKeepNote(path, JSON.parse(fs.readFileSync(path))));
     // Sort in ascending order by the updated ts so that when we create pages in Notion one by one,
-    // the relative ordering of Notion's native created/updated timestamps will be approx. correct across notes.
-    // Note: Notion rounds these timestamps to the closest minute, so it won't be perfect, but better than nothing.
+    // the relative ordering of the notes in the Notion database is correct (even if Notion's native created/updated timestamps are not).
     notes.sort((a, b) => a.updated - b.updated);
     return notes;
 }
