@@ -34,7 +34,7 @@ function parseGoogleKeepNoteJSON(noteJSON) {
     }
 
     const labels = noteJSON.labels ? noteJSON.labels = noteJSON.labels.map(l => { return { name: l.name } }) : [];
-    const note = {
+    return {
         title: noteJSON.title,
         created: new Date(noteJSON.createdTimestampUsec / 1000),
         updated: new Date(noteJSON.userEditedTimestampUsec / 1000),
@@ -42,19 +42,28 @@ function parseGoogleKeepNoteJSON(noteJSON) {
         isArchived: noteJSON.isArchived,
         isTrashed: noteJSON.isTrashed,
         isPinned: noteJSON.isPinned,
-        hasAttachments: noteJSON.attachments && noteJSON.attachments.length > 0 ? true : false,
+        attachments: noteJSON.attachments,
+        textContent: noteJSON.textContent,
+        listContent: noteJSON.listContent,
     };
-    // optional properties - some notes have no content at all
-    if (noteJSON.textContent) {
-        note.textContent = noteJSON.textContent;
-    } else if (noteJSON.listContent) {
-        note.listContent = noteJSON.listContent;
-    }
-    return note;
 }
 
-export function getCreatePageParams(dbId, keepNote) {
+// https://developers.notion.com/reference/patch-block-children
+export function getAppendBlocksChildrenParamsList(parentId, keepNote) {
     const blocks = getNotionBlocks(keepNote);
+    const paramsList = [];
+    // Notion only allows appending <= 100 blocks in a single request, so chunk into a list of request params
+    for (let i = 0; i < blocks.length; i += 100) {
+        paramsList.push({
+            "block_id": parentId,
+            children: blocks.slice(i, i + 100),
+        })
+    }
+    return paramsList;
+}
+
+// https://developers.notion.com/reference/post-page
+export function getCreatePageParams(dbId, keepNote) {
     const metadata = getNotionMetadata(keepNote);
     const title = keepNote.title ? keepNote.title
         : keepNote.textContent ? keepNote.textContent.split("\n")[0]
@@ -91,8 +100,7 @@ export function getCreatePageParams(dbId, keepNote) {
             "Metadata": {
                 "multi_select": metadata,
             }
-        },
-        "children": blocks,
+        }
     };
 }
 
@@ -107,15 +115,44 @@ function getNotionMetadata(keepNote) {
     if (keepNote.isPinned) {
         metadata.push({ name: "pinned" });
     }
-    if (keepNote.hasAttachments) {
+    if (keepNote.attachments && keepNote.attachments.length > 0) {
         metadata.push({ name: "missing attachment(s)" });
     }
     return metadata;
 }
 
 function getNotionBlocks(keepNote) {
+    const blocks = [];
+    if (keepNote.attachments && keepNote.attachments.length > 0) {
+        blocks.push({
+            "object": "block",
+            "toggle": {
+                "rich_text": [{
+                    "type": "text",
+                    "text": {
+                      "content": "Missing attachments",
+                    }
+                  }],
+                  "children": keepNote.attachments.map(attachment => {
+                    return {
+                        "object": "block",
+                        "to_do": {
+                            "rich_text": [
+                                {
+                                    "text": {
+                                        "content": attachment.filePath,
+                                    },
+                                }
+                            ],
+                            "checked": false,
+                        },
+                    };
+                }),
+            }
+        });
+    }
     if (keepNote.textContent) {
-        return keepNote.textContent.split("\n").map(x => {
+        blocks.push(...keepNote.textContent.split("\n").map(x => {
             return {
                 "object": "block",
                 "paragraph": {
@@ -129,10 +166,10 @@ function getNotionBlocks(keepNote) {
                     "color": "default"
                 }
             };
-        });
+        }));
     };
     if (keepNote.listContent) {
-        return keepNote.listContent.map(item => {
+        blocks.push(...keepNote.listContent.map(item => {
             return {
                 "object": "block",
                 "to_do": {
@@ -147,12 +184,12 @@ function getNotionBlocks(keepNote) {
                     "checked": item.isChecked,
                 },
             };
-        });
+        }));
     }
-    return undefined;
+    return blocks;
 }
 
-
+// https://developers.notion.com/reference/create-a-database
 export function getCreateDatabaseParams(pageId) {
     return {
         parent: {
