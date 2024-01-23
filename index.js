@@ -7,8 +7,7 @@ const notion = new Client({
 });
 
 (async () => {
-    // const keepNotes = readAllGoogleKeepNotes(process.env.GOOGLE_KEEP_TAKEOUT_DIR_PATH);
-    const keepNotes = readAllGoogleKeepNotes("./testdata");
+    const keepNotes = readAllGoogleKeepNotes(process.env.GOOGLE_KEEP_TAKEOUT_DIR_PATH)
     console.log(`Importing ${keepNotes.length} Google Keep Notes`);
 
     const createDbResp = await notion.databases.create(
