@@ -52,8 +52,9 @@ function parseGoogleKeepNoteJSON(noteJSON) {
 export function getAppendBlocksChildrenParamsList(parentId, keepNote) {
     const blocks = getNotionBlocks(keepNote);
     const paramsList = [];
-    // Notion only allows appending <= 100 blocks in a single request, so chunk into multiple requests
-    for (let i = 0; i < blocks.length; i += 100) {
+    // Notion only allows appending <= 100 blocks in a single request, so chunk into multiple requests.
+    // Note: we create the first 100 blocks as part of the page creation request, so skip those.
+    for (let i = 100; i < blocks.length; i += 100) {
         paramsList.push({
             "block_id": parentId,
             children: blocks.slice(i, i + 100),
@@ -64,6 +65,9 @@ export function getAppendBlocksChildrenParamsList(parentId, keepNote) {
 
 // https://developers.notion.com/reference/post-page
 export function getCreatePageParams(dbId, keepNote) {
+    // Notion only allows appending <= 100 blocks as part of the page creation request.
+    // The rest are handled by getAppendBlocksChildrenParamsList.
+    const blocks = getNotionBlocks(keepNote).slice(0, 100);
     const metadata = getNotionMetadata(keepNote);
     const title = keepNote.title ? keepNote.title
         : keepNote.textContent ? keepNote.textContent.split("\n")[0]
@@ -100,7 +104,8 @@ export function getCreatePageParams(dbId, keepNote) {
             "Metadata": {
                 "multi_select": metadata,
             }
-        }
+        },
+        "children": blocks,
     };
 }
 
