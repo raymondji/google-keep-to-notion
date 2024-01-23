@@ -2,10 +2,14 @@ import fs from 'fs';
 import path from 'path';
 
 export function readAllGoogleKeepNotes(dir) {
-    return fs.readdirSync(dir)
+    const notes = fs.readdirSync(dir)
         .filter(file => path.extname(file) === '.json')
         .map(file => path.resolve(dir, file))
         .map(path => toGoogleKeepNote(path, JSON.parse(fs.readFileSync(path))));
+    // Sort in descending order by the updated ts so that when we create pages in Notion,
+    // the relative ordering of Notion created/updated timestamps will still be approximately correct.
+    notes.sort((a, b) => b.updated - a.updated);
+    return notes;
 }
 
 function toGoogleKeepNote(path, noteJSON) {
@@ -88,12 +92,12 @@ export function getCreatePageParams(dbId, keepNote) {
                     }
                 ]
             },
-            "Created": {
+            "Created (Google Keep)": {
                 date: {
                     "start": keepNote.created.toISOString(),
                 },
             },
-            "Updated": {
+            "Updated (Google Keep)": {
                 date: {
                     "start": keepNote.updated.toISOString(),
                 },
