@@ -7,23 +7,32 @@ const notion = new Client({
 });
 
 (async () => {
-    const keepNotes = readAllGoogleKeepNotes(process.env.GOOGLE_KEEP_TAKEOUT_DIR_PATH)
+    const keepNotes = readAllGoogleKeepNotes(process.env.GOOGLE_KEEP_TAKEOUT_DIR_PATH);
     console.log(`Importing ${keepNotes.length} Google Keep Notes`);
 
     const createDbResp = await notion.databases.create(
         getCreateDatabaseParams(process.env.NOTION_PAGE_ID));
     const dbId = createDbResp.id;
 
+    const failed = [];
     for (const note of keepNotes) {
-        const pageParams = getCreatePageParams(dbId, note);
-        const pageResp = await notion.pages.create(pageParams);
-        await sleep(300);
-
-        const blocksParamsList = getAppendBlocksChildrenParamsList(pageResp.id, note);
-        for (const blocksParams of blocksParamsList) {
-            await notion.blocks.children.append(blocksParams);
+        try {
+            const pageParams = getCreatePageParams(dbId, note);
+            const pageResp = await notion.pages.create(pageParams);
             await sleep(300);
+
+            const blocksParamsList = getAppendBlocksChildrenParamsList(pageResp.id, note);
+            for (const blocksParams of blocksParamsList) {
+                await notion.blocks.children.append(blocksParams);
+                await sleep(300);
+            }
+        } catch (err) {
+            console.error("Failed to import note:", note, "error:", err);
+            failed.push(note);
         }
+    }
+    if (failed.length > 0) {
+        console.error(`IMPORTANT: Failed to import ${failed.length} note(s)`);
     }
 })();
 
