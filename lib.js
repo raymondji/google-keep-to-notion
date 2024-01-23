@@ -52,7 +52,7 @@ function parseGoogleKeepNoteJSON(noteJSON) {
 export function getAppendBlocksChildrenParamsList(parentId, keepNote) {
     const blocks = getNotionBlocks(keepNote);
     const paramsList = [];
-    // Notion only allows appending <= 100 blocks in a single request, so chunk into a list of request params
+    // Notion only allows appending <= 100 blocks in a single request, so chunk into multiple requests
     for (let i = 0; i < blocks.length; i += 100) {
         paramsList.push({
             "block_id": parentId,
