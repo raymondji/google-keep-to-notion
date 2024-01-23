@@ -6,9 +6,10 @@ export function readAllGoogleKeepNotes(dir) {
         .filter(file => path.extname(file) === '.json')
         .map(file => path.resolve(dir, file))
         .map(path => toGoogleKeepNote(path, JSON.parse(fs.readFileSync(path))));
-    // Sort in descending order by the updated ts so that when we create pages in Notion,
-    // the relative ordering of Notion created/updated timestamps will still be approximately correct.
-    notes.sort((a, b) => b.updated - a.updated);
+    // Sort in ascending order by the updated ts so that when we create pages in Notion one by one,
+    // the relative ordering of Notion's native created/updated timestamps will be approx. correct across notes.
+    // Note: Notion rounds these timestamps to the closest minute, so it won't be perfect, but better than nothing.
+    notes.sort((a, b) => a.updated - b.updated);
     return notes;
 }
 
@@ -218,10 +219,10 @@ export function getCreateDatabaseParams(pageId) {
             Name: {
                 title: {},
             },
-            "Created": {
+            "Created (Google Keep)": {
                 date: {},
             },
-            "Updated": {
+            "Updated (Google Keep)": {
                 date: {},
             },
             "Metadata": {
